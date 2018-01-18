@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 const pg = require('pg');
 const format = require('pg-format');
-
+//format is some sort of helper to help with formatting correct queries
 
 // configuration for database
 const config = {
@@ -38,18 +38,25 @@ router.route('/')
         let email = req.body.email;
         let password = req.body.password;
         console.log('someone is trying to login', email, password)
-        let ourQeury = format(`select * from test_table where email=$1 and password=$2`);
+        let ourQeury = format(`select * from test_table where email=$1 and password=$2`);// note diff placeholder in postgre
             let myClient = pool.query(ourQeury, [email, password], (error, result)=>{
             if (error){
                 console.log("oops", error);
             }else{
-                console.log('succesful read from database')
-                // res.json({
-                //     result: result.rows
-                // })
-                res.render('successlogin',{
-                    
-                })
+                if (result.rows != 0){
+                    console.log('succesful read from database')
+                    // res.json({
+                    //     result: result.rows
+                    // })
+                    res.render('successlogin',{
+                        name: result.rows[0].name
+                    })
+                }else{
+                    console.log('try again or register')
+                    res.render('login', {
+                        message: 'try again, or please register'
+                    })
+                }
             }
         })
 
@@ -70,42 +77,31 @@ router.route('/register')
         let name = req.body.name;
         let email = req.body.email;
         let password = req.body.password;
-        let id = 1
         console.log('reading from register form: ', name, email, password)
-//         INSERT INTO test_table (email, password, name)
-// VALUES ('niktechnopro@gmail.com', 'aaa', 'Nik')
-        var insertQeury = format(`INSERT INTO test_table (email, password, name) VALUES ($1,$2,$3);`);   //note diff placeholders from sql  
-        let ourQeury = pool.query(insertQeury, [email, password, name], (error)=>{
-            if (error){
-                console.log('oops', error)
+        //let's check if record in the database
+        let checkQuery = format(`SELECT * FROM test_table where email=$1 and password=$2;`);
+        pool.query(checkQuery, [email, password], (error, result)=>{
+            if(!error){
+                if(result.rows === 0){
+                    let insertQeury = format(`INSERT INTO test_table (email, password, name) VALUES ($1,$2,$3);`);   //note diff placeholders from sql  
+                    let ourQeury = pool.query(insertQeury, [email, password, name], (error)=>{
+                    if (error){
+                        console.log('oops', error)
+                    }else{
+                        console.log('successful insertion into table');
+                        res.render('login',{
+                        message: "now you can login"
+                        })
+                    }
+                })
             }else{
-                console.log('successful insertion into table');
-                res.render('login',{
-                    message: "now you can login"
+                res.render('login', {
+                    message: "you are already in database, now login"
                 })
             }
-        })
+        }
     })
+})
 
 
 module.exports = router;
-
-//  router.route('/')
-//     .post((req, res)=>{
-//         console.log('someone showed up on post route');
-//         res.end('post route got hit');
-//     })
-//     .get((req, res)=>{
-//         console.log('someone showed up on our get route');
-//             var ourQeury = format(`select * from test_table`)
-//             var myClient = pool.query(ourQeury, (error, result)=>{
-//             if (error){
-//                 console.log(error);
-//             }else{
-//                 console.log('succesful read from database')
-//                 res.json({
-//                     result: result
-//                 })
-//             }
-//         })
-//     })
