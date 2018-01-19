@@ -39,7 +39,7 @@ router.route('/')
         }).catch(error=>{
             // res.status(400).send('error') - this is just to send error
             res.render('login',{
-                message: "you need to register"
+                message: "you need to register or check password"
             })
         })
     })
@@ -61,19 +61,35 @@ router.route('/register')
         let email = req.body.email;
         let password = req.body.password;
         console.log('reading from register form: ', name, email, password)
-        Users.findOrCreate({
+        Users.findOne({
             where: { email: email}, // we search for this user
-            defaults: { password: password, name: name } // if it doesn't exist, we create it with this additional data
         }).then(result => {
-            res.render('login', {
-                message: 'your email is in database'
-            })
-            // res.send('your email is in database')
+            console.log('then in register post', result)
+            if (result === null){
+                Users.create({
+                    email: email,
+                    password: password,
+                    name: name
+                }).then(result => {
+                    res.render('successlogin',{
+                        name: name,
+                        title: 'success register'
+                    })
+                }).catch(error => {
+                    // console.log('catch error', error)
+                    res.render('register', {
+                        message: 'make sure all fields are filled in'
+                    })
+                })
+            }else{
+                res.render('login', {
+                    message: 'your email already in database - login'
+                })
+            }
         }).catch(result => {
-            res.render('successlogin',{
-                name: name,
-                title: 'success'
-            })    
+            res.render('register',{
+                message: 'something went wrong, try again'  
+            }) 
         })
 })
 

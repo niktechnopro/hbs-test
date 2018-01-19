@@ -13,15 +13,17 @@ const Users = connection.define('test_table_two', {
     password: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'password'// if no password given - uses default vale - password
+        validate:{
+            notEmpty: true, //not allowing empty string
+        }
     },
     name: {
         type: Sequelize.TEXT,
         allowNull: false
     }
 })
-connection.sync ({ // sync function checks for the table and creates it if does not exist
-    // force: true //forcefully drops the table if force set to true
-}).then( () => {
-});
+// connection.sync ({ // sync function checks for the table and creates it if does not exist
+//     // force: true //forcefully drops the table if force set to true
+// }).then( () => {
+// });
 module.exports = Users;
