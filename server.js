@@ -8,7 +8,6 @@ const handleBars = require('express-handlebars');// we are going to use handleba
 var cookieParser = require('cookie-parser');
 const session = require('express-session'); //for sessions
 // var RedisStore = require('connect-redis')(session);//session store
-
 const port = 3000;
 
 // middleware

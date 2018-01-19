@@ -9,12 +9,14 @@
   "version": "",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
-    "express-sessions": "^1.0.6",
+    "express-session": "^1.15.6",
     "hbs": "^4.0.1",
     "path": "^0.12.7",
     "pg": "^7.4.1",
-    "pg-format": "^1.0.4"
+    "pg-format": "^1.0.4",
+    "sequelize": "^4.31.2"
   }
 }
