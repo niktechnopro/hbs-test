@@ -8,7 +8,7 @@ const Users = connection.define('test_table_two', {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true, // to ensure every email is unique
-        validate: {isEmail: true}
+        validate: {isEmail: true} //to ensure it looks like an email
     },
     password: {
         type: Sequelize.STRING,

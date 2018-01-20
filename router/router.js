@@ -57,6 +57,7 @@ router.route('/register')
         })
     })
     .post((req, res)=>{
+        //body property is available because we have a body-parser
         let name = req.body.name;
         let email = req.body.email;
         let password = req.body.password;
