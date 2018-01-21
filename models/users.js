@@ -12,10 +12,10 @@ const Users = connection.define('test_table_two', {
     },
     password: {
         type: Sequelize.STRING,
-        allowNull: false,
-        validate:{
-            notEmpty: true, //not allowing empty string
-        }
+        allowNull: false
+        // validate:{
+        //     notEmpty: true, //not allowing empty string
+        // }
     },
     name: {
         type: Sequelize.TEXT,

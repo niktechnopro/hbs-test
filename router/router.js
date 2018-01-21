@@ -1,6 +1,7 @@
 console.log('loading router module')
 var express = require('express');
 var router = express.Router();
+const passport = require('passport');
 const Users = require('../models/users');//loading table model
 
 
